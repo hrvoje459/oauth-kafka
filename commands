@@ -1,0 +1,16 @@
+docker compose up 
+docker compose down (--volumes)
+
+
+kafka-console-producer --topic oauth-topic --bootstrap-server localhost:9093
+kafka-console-consumer --topic oauth-topic --from-beginning --bootstrap-server localhost:9092
+kafka-topics --list--bootstrap-server localhost:9094
+kafka-topics --create --bootstrap-server localhost:9094 --topic osmi-topic  
+kafka-topics --describe --bootstrap-server localhost:9094 --topic osmi-topic  
+
+kafka-acls --add --allow-principal User:'alice' --bootstrap-server localhost:9092 --topic oauth-topic-97 --operation All --command-config consumer.properties
+kafka-console-producer --topic oauth-topic-97 --bootstrap-server localhost:9093 --producer.config consumer.properties
+kafka-console-consumer --topic oauth-topic-97 --bootstrap-server localhost:9093 --from-beginning --consumer.config consumer.properties
+
+kafka-acls --add --allow-principal "User:alice" --group "*" --bootstrap-server localhost:9092 --operation All --command-config admin.properties
+kafka-acls --add --allow-principal User:'alice' --bootstrap-server localhost:9092 --topic oauth-topic-97 --operation All --command-config admin.properties
