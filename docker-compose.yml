@@ -7,7 +7,7 @@ services:
     ports:
       - "9092:9092"
     volumes:
-      - ./config/kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -35,7 +35,7 @@ services:
       KAFKA_SUPER_USERS: 'User:admin'
       KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
-      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
   kafka-2:
     image: confluentinc/cp-kafka:7.5.1
     hostname: kafka-2
@@ -43,7 +43,7 @@ services:
     ports:
       - "9093:9093"
     volumes:
-      - ./config/kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker'
@@ -68,7 +68,7 @@ services:
       KAFKA_SUPER_USERS: 'User:admin'
       KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
-      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
   kafka-3:
     image: confluentinc/cp-kafka:7.5.1
     hostname: kafka-3
@@ -76,7 +76,7 @@ services:
     ports:
       - "9094:9094"
     volumes:
-      - ./config/kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+      - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker'
@@ -101,5 +101,41 @@ services:
       KAFKA_SUPER_USERS: 'User:admin'
       KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
-      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf'
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
+  kafka-security-manager:
+    image: conduktor/kafka-security-manager:latest
+    environment:
+      KSM_READONLY: "false"
+      AUTHORIZER_CLASS: io.conduktor.ksm.compat.AdminClientAuthorizer
+      #AUTHORIZER_ZOOKEEPER_CONNECT: "zoo1:2181"
+      # FILE:
+      SOURCE_CLASS: "io.conduktor.ksm.source.FileSourceAcl"
+      SOURCE_FILE_FILENAME: "acls/preprod/main.yml"
+      
+      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9092
+      ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required unsecuredLoginStringClaim_sub="admin";'
 
+      ADMIN_CLIENT_SASL_MECHANISM: OAUTHBEARER
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_client_admin_jaas.conf'
+      # GITHUB:
+#      SOURCE_CLASS: "io.conduktor.ksm.source.GitHubSourceAcl"
+#      SOURCE_GITHUB_USER: "conduktor"
+#      SOURCE_GITHUB_REPO: "kafka-security-manager-example"
+#      SOURCE_GITHUB_FILEPATH: "acls.csv"
+
+      # SOURCE ACLS FROM KAFKA INSTEAD
+      # THIS WON't WORK WITH THIS DOCKER COMPOSE FILE AS IT
+      # REQUIRES KAFKA TO BE CONFIGURED IN SECURED MODE
+      # PR ACCEPTED :)
+      
+      # AUTHORIZER_CLASS: "io.conduktor.ksm.compat.AdminClientAuthorizer"
+      # ADMIN_CLIENT_BOOTSTRAP_SERVERS: "kafka1:19092"
+      # set ADMIN_CLIENT_SECURITY_PROTOCOL, ADMIN_CLIENT_SASL_JAAS_CONFIG, ADMIN_CLIENT_SASL_MECHANISM, ADMIN_CLIENT_SSL_KEY_PASSWORD, ADMIN_CLIENT_SSL_KEYSTORE_LOCATION, ADMIN_CLIENT_SSL_KEYSTORE_PASSWORD, ADMIN_CLIENT_SSL_TRUSTSTORE_LOCATION, ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD for a secure Kafka setup
+    volumes:
+      - ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
+      - ./config/admin.properties:/etc/kafka/admin.properties
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3

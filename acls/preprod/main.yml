@@ -1,0 +1,15 @@
+users:
+  alice:
+    topics:
+      oauth-topic-97:
+        - All
+    groups:
+      '*':
+        - All
+  bob:
+    topics:
+      oauth-kafka-98:
+        - All
+    groups:
+      '*':
+        - All
