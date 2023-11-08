@@ -33,9 +33,12 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
-      KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
+      ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+
+
   kafka-2:
     image: confluentinc/cp-kafka:7.5.1
     hostname: kafka-2
@@ -66,9 +69,11 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
-      KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
+      ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"     
+
   kafka-3:
     image: confluentinc/cp-kafka:7.5.1
     hostname: kafka-3
@@ -99,9 +104,11 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
-      KAFKA_LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER: INFO
       ### KAFKA_OPTS
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
+      ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+
   kafka-security-manager:
     image: conduktor/kafka-security-manager:latest
     environment:
