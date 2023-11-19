@@ -6,8 +6,13 @@ services:
     container_name: kafka-1
     ports:
       - "9092:9092"
+      - "9097:9097"
     volumes:
       - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
+      - ./certs/broker_1/b1_keystore.p12:/etc/kafka/secrets/b1_keystore.p12
+      - ./certs/broker_1/b1_keystore_password.txt:/etc/kafka/secrets/b1_keystore_password.txt
+      - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+      - ./certs/cert_authority/truststore_password.txt:/etc/kafka/secrets/truststore_password.txt
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -16,20 +21,20 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-1:29092,SASL_PLAINTEXT://kafka-1:9092'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_PLAINTEXT,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT' 
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka-1:29092,CONTROLLER://kafka-1:29093,SASL_PLAINTEXT://0.0.0.0:9092' 
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-1:29092,SASL_PLAINTEXT://kafka-1:9092,SASL_SSL://kafka-1:9097'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL' 
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka-1:29092,CONTROLLER://kafka-1:29093,SASL_PLAINTEXT://0.0.0.0:9092,SASL_SSL://0.0.0.0:9097' 
       ### ADDITIONAL
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_SSL
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
       KAFKA_SASL_ENABLED_MECHANISMS: OAUTHBEARER
       #KAFKA_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_LISTENER_NAME_SASL_PLAINTEXT_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: OAUTHBEARER
-      KAFKA_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_PROTOCOL: SASL_SSL
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
@@ -37,6 +42,21 @@ services:
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
       ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
       KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+      ### SSL
+      KAFKA_SSL_KEYSTORE_FILENAME: b1_keystore.p12
+      KAFKA_SSL_TRUSTSTORE_FILENAME: client.truststore.p12
+      KAFKA_SSL_KEY_CREDENTIALS: b1_keystore_password.txt
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: b1_keystore_password.txt
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: truststore_password.txt
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+      KAFKA_SSL_KEYSTORE_TYPE: PKCS12
+      KAFKA_SSL_TRUSTSTORE_TYPE: PKCS12
+      ### SEEMS REDUNDANT BUT INTERBROKER SSL IS NOT WORKING IF FOLLOWING ARE NOT SPECIFIED
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/b1_keystore.p12
+      KAFKA_SSL_KEYSTORE_PASSWORD: b1_keystore_password
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: truststore_password
+
 
 
   kafka-2:
@@ -45,8 +65,13 @@ services:
     container_name: kafka-2
     ports:
       - "9093:9093"
+      - "9098:9098"
     volumes:
       - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
+      - ./certs/broker_2/b2_keystore.p12:/etc/kafka/secrets/b2_keystore.p12
+      - ./certs/broker_2/b2_keystore_password.txt:/etc/kafka/secrets/b2_keystore_password.txt
+      - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+      - ./certs/cert_authority/truststore_password.txt:/etc/kafka/secrets/truststore_password.txt
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker'
@@ -55,24 +80,40 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-2:29093,SASL_PLAINTEXT://kafka-2:9093'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_PLAINTEXT,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT' 
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka-2:29093,SASL_PLAINTEXT://0.0.0.0:9093' 
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-2:29093,SASL_PLAINTEXT://kafka-2:9093,SASL_SSL://kafka-2:9098'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL' 
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka-2:29093,SASL_PLAINTEXT://0.0.0.0:9093,SASL_SSL://0.0.0.0:9098' 
       ### ADDITIONAL
-      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_SSL
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
       KAFKA_SASL_ENABLED_MECHANISMS: OAUTHBEARER
       KAFKA_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_LISTENER_NAME_SASL_PLAINTEXT_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: OAUTHBEARER
-      KAFKA_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_PROTOCOL: SASL_SSL
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
       ### KAFKA_OPTS
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
       ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
-      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"     
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"  
+      ### SSL
+      KAFKA_SSL_KEYSTORE_FILENAME: b2_keystore.p12
+      KAFKA_SSL_TRUSTSTORE_FILENAME: client.truststore.p12
+      KAFKA_SSL_KEY_CREDENTIALS: b2_keystore_password.txt
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: b2_keystore_password.txt
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: truststore_password.txt
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+      KAFKA_SSL_KEYSTORE_TYPE: PKCS12
+      KAFKA_SSL_TRUSTSTORE_TYPE: PKCS12
+      ### SEEMS REDUNDANT BUT INTERBROKER SSL IS NOT WORKING IF FOLLOWING ARE NOT SPECIFIED
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/b2_keystore.p12
+      KAFKA_SSL_KEYSTORE_PASSWORD: b2_keystore_password
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: truststore_password  
+    depends_on:
+      - kafka-1
 
   kafka-3:
     image: confluentinc/cp-kafka:7.5.1
@@ -82,6 +123,10 @@ services:
       - "9094:9094"
     volumes:
       - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
+      - ./certs/broker_3/b3_keystore.p12:/etc/kafka/secrets/b3_keystore.p12
+      - ./certs/broker_3/b3_keystore_password.txt:/etc/kafka/secrets/b3_keystore_password.txt
+      - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+      - ./certs/cert_authority/truststore_password.txt:/etc/kafka/secrets/truststore_password.txt
     environment:
       ### REQUIRED
       KAFKA_PROCESS_ROLES: 'broker'
@@ -90,17 +135,17 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-3:29094,SASL_PLAINTEXT://kafka-3:9094'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_PLAINTEXT,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT' 
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka-3:29094,SASL_PLAINTEXT://0.0.0.0:9094' 
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka-3:29094,SASL_SSL://kafka-3:9098'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,PLAINTEXT:SASL_PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL' 
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka-3:29094,SASL_PLAINTEXT://0.0.0.0:9094,SASL_SSL://0.0.0.0:9098' 
       ### ADDITIONAL
-      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_SSL
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
       KAFKA_SASL_ENABLED_MECHANISMS: OAUTHBEARER
       KAFKA_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_LISTENER_NAME_SASL_PLAINTEXT_OAUTHBEARER_SASL_JAAS_CONFIG: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;
       KAFKA_SASL_MECHANISM_CONTROLLER_PROTOCOL: OAUTHBEARER
-      KAFKA_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      KAFKA_SECURITY_PROTOCOL: SASL_SSL
       KAFKA_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: false
       KAFKA_SUPER_USERS: 'User:admin'
@@ -108,6 +153,22 @@ services:
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_server_admin_jaas.conf'
       ### LOGGING; for additonal options take a look at https://docs.confluent.io/platform/current/installation/docker/development.html#log-to-external-volumes
       KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+      ### SSL
+      KAFKA_SSL_KEYSTORE_FILENAME: b3_keystore.p12
+      KAFKA_SSL_TRUSTSTORE_FILENAME: client.truststore.p12
+      KAFKA_SSL_KEY_CREDENTIALS: b3_keystore_password.txt
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: b3_keystore_password.txt
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: truststore_password.txt
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: " "
+      KAFKA_SSL_KEYSTORE_TYPE: PKCS12
+      KAFKA_SSL_TRUSTSTORE_TYPE: PKCS12
+      ### SEEMS REDUNDANT BUT INTERBROKER SSL IS NOT WORKING IF FOLLOWING ARE NOT SPECIFIED
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/b2_keystore.p12
+      KAFKA_SSL_KEYSTORE_PASSWORD: b3_keystore_password
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: truststore_password  
+    depends_on:
+      - kafka-1
 
   kafka-security-manager:
     image: conduktor/kafka-security-manager:latest
@@ -117,14 +178,17 @@ services:
       #AUTHORIZER_ZOOKEEPER_CONNECT: "zoo1:2181"
       # FILE:
       SOURCE_CLASS: "io.conduktor.ksm.source.FileSourceAcl"
-      SOURCE_FILE_FILENAME: "acls/preprod/main.yml"
+      SOURCE_FILE_FILENAME: "/opt/docker/acls/preprod/main.yml"
       
-      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9092
-      ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9097
+      ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_SSL
       ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required unsecuredLoginStringClaim_sub="admin";'
 
       ADMIN_CLIENT_SASL_MECHANISM: OAUTHBEARER
       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_client_admin_jaas.conf'
+
+      ADMIN_CLIENT_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
+      ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD: truststore_password
       # GITHUB:
 #      SOURCE_CLASS: "io.conduktor.ksm.source.GitHubSourceAcl"
 #      SOURCE_GITHUB_USER: "conduktor"
@@ -142,6 +206,7 @@ services:
     volumes:
       - ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
       - ./config/admin.properties:/etc/kafka/admin.properties
+      - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
     depends_on:
       - kafka-1
       - kafka-2
