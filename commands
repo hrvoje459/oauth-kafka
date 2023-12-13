@@ -4,7 +4,7 @@ docker compose down (--volumes)
 
 kafka-console-producer --topic oauth-topic --bootstrap-server localhost:9093
 kafka-console-consumer --topic oauth-topic --from-beginning --bootstrap-server localhost:9092
-kafka-topics --list--bootstrap-server localhost:9094
+kafka-topics --list --bootstrap-server localhost:9094
 kafka-topics --create --bootstrap-server localhost:9094 --topic osmi-topic  
 kafka-topics --describe --bootstrap-server localhost:9094 --topic osmi-topic  
 

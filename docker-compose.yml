@@ -6,7 +6,6 @@ services:
     container_name: kafka-1
     ports:
       - "9092:9092"
-      - "9097:9097"
     volumes:
       - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
       - ./certs/broker_1/b1_keystore.p12:/etc/kafka/secrets/b1_keystore.p12
@@ -21,9 +20,9 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-1:9097'
+      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-1:9092'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,SASL_SSL:SASL_SSL' 
-      KAFKA_LISTENERS: 'CONTROLLER://kafka-1:29093,SASL_SSL://0.0.0.0:9097' 
+      KAFKA_LISTENERS: 'CONTROLLER://kafka-1:29093,SASL_SSL://kafka-1:9092' 
       ### ADDITIONAL
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -65,7 +64,6 @@ services:
     container_name: kafka-2
     ports:
       - "9093:9093"
-      - "9098:9098"
     volumes:
       - ./config/kafka_server_admin_jaas.conf:/etc/kafka/kafka_server_admin_jaas.conf
       - ./certs/broker_2/b2_keystore.p12:/etc/kafka/secrets/b2_keystore.p12
@@ -80,9 +78,9 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-2:9098'
+      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-2:9093'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,SASL_SSL:SASL_SSL' 
-      KAFKA_LISTENERS: 'SASL_SSL://0.0.0.0:9098' 
+      KAFKA_LISTENERS: 'SASL_SSL://kafka-2:9093' 
       ### ADDITIONAL
       KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_SSL
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
@@ -135,9 +133,9 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       ### FAILS WITHOUT THESE
       CLUSTER_ID: 'snEqtedQR4-9lMvInatV6Q'
-      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-3:9098'
+      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://kafka-3:9094'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:SASL_SSL,SASL_SSL:SASL_SSL' 
-      KAFKA_LISTENERS: 'SASL_SSL://0.0.0.0:9098' 
+      KAFKA_LISTENERS: 'SASL_SSL://kafka-3:9094' 
       ### ADDITIONAL
       KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_SSL
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
@@ -180,7 +178,7 @@ services:
       SOURCE_CLASS: "io.conduktor.ksm.source.FileSourceAcl"
       SOURCE_FILE_FILENAME: "/opt/docker/acls/preprod/main.yml"
       
-      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9097
+      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9092
       ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_SSL
       ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required unsecuredLoginStringClaim_sub="admin";'
 

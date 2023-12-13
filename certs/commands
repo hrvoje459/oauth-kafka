@@ -1,0 +1,39 @@
+# keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -validity 700 -genkey -keyalg RSA -storetype pkcs12
+# keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -validity 700 -genkey -keyalg RSA -storetype pkcs12
+# keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12
+
+
+keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-1
+keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-2
+keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-3
+
+
+keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -certreq -file ./broker_1/b1.csr -ext SAN=DNS:kafka-1
+keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -certreq -file ./broker_2/b2.csr -ext SAN=DNS:kafka-2
+keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -certreq -file ./broker_3/b3.csr -ext SAN=DNS:kafka-3
+
+mkdir cert_authority
+cd cert_authority
+nano openssl-ca.cnf
+
+echo 01 > serial.txt
+touch index.txt
+openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM
+
+keytool -keystore client.truststore.p12 -alias CARoot -storetype pkcs12 -import -file cacert.pem
+
+
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_1/b1_cert_signed -infiles ../broker_1/b1.csr
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_2/b2_cert_signed -infiles ../broker_2/b2.csr
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_3/b3_cert_signed -infiles ../broker_3/b3.csr
+
+cd ..
+
+keytool -keystore ./broker_1/b1_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
+keytool -keystore ./broker_2/b2_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
+keytool -keystore ./broker_3/b3_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
+
+
+keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -import -file ./broker_1/b1_cert_signed
+keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -import -file ./broker_2/b2_cert_signed
+keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -import -file ./broker_3/b3_cert_signed
