@@ -14,3 +14,14 @@ kafka-console-consumer --topic oauth-topic-97 --bootstrap-server localhost:9093 
 
 kafka-acls --add --allow-principal "User:alice" --group "*" --bootstrap-server localhost:9092 --operation All --command-config admin.properties
 kafka-acls --add --allow-principal User:'alice' --bootstrap-server localhost:9092 --topic oauth-topic-97 --operation All --command-config admin.properties
+
+
+
+KAFKA-SECURITY-MANAGER
+brew install sbt
+
+sbt reload clean
+sbt compile
+sbt clean assembly
+
+cat /etc/kafka/kafka.properties

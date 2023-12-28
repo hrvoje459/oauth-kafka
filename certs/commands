@@ -6,19 +6,22 @@
 keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-1
 keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-2
 keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-3
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:keycloak
 
 
 keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -certreq -file ./broker_1/b1.csr -ext SAN=DNS:kafka-1
 keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -certreq -file ./broker_2/b2.csr -ext SAN=DNS:kafka-2
 keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -certreq -file ./broker_3/b3.csr -ext SAN=DNS:kafka-3
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -certreq -file ./keycloak/keycloak.csr -ext SAN=DNS:keycloak
 
 mkdir cert_authority
 cd cert_authority
 nano openssl-ca.cnf
+### insert CA configuration from here https://kafka.apache.org/documentation/#security_ssl_ca
 
 echo 01 > serial.txt
 touch index.txt
-openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM
+openssl req -x509 -config openssl-ca.cnf -days 700 -newkey rsa:4096 -sha256 -nodes -out cacert.pem -outform PEM
 
 keytool -keystore client.truststore.p12 -alias CARoot -storetype pkcs12 -import -file cacert.pem
 
@@ -26,14 +29,39 @@ keytool -keystore client.truststore.p12 -alias CARoot -storetype pkcs12 -import 
 openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_1/b1_cert_signed -infiles ../broker_1/b1.csr
 openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_2/b2_cert_signed -infiles ../broker_2/b2.csr
 openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../broker_3/b3_cert_signed -infiles ../broker_3/b3.csr
+openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out ../keycloak/keycloak_cert_signed -infiles ../keycloak/keycloak.csr
 
 cd ..
 
 keytool -keystore ./broker_1/b1_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
 keytool -keystore ./broker_2/b2_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
 keytool -keystore ./broker_3/b3_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias CARoot -import -file ./cert_authority/cacert.pem
 
 
 keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -import -file ./broker_1/b1_cert_signed
 keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -import -file ./broker_2/b2_cert_signed
 keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -import -file ./broker_3/b3_cert_signed
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -import -file ./keycloak/keycloak_cert_signed
+
+
+
+### To resolve issues with certificate in java you must add CA root cert to java keystore https://www.tutorialworks.com/java-trust-ssl/
+### try some of the options from the list 
+#/usr/libexec/java_home -V
+#export JAVA_HOME=`/usr/libexec/java_home -v 17`
+#ls $JAVA_HOME/lib/security/cacerts 
+#sudo keytool -import -trustcacerts --cacerts -storepass changeit -noprompt -alias fer-kafka-ca -file /Users/hrvojerom/faks/diplomski_projekt/oauth-kafka/certs/cert_authority/cacert.pem
+### The thing that worked for IntelliJ was:
+sudo keytool -import -trustcacerts -keystore /Users/hrvojerom/Library/Java/JavaVirtualMachines/openjdk-20/Contents/Home/lib/security/cacerts -storepass changeit -noprompt -alias fer-kafka-ca -file /Users/hrvojerom/faks/diplomski_projekt/oauth-kafka/certs/cert_authority/cacert.pem
+
+### Maven must package for java version 11 of java, no need to select java version 11 just set maven compiler source and target in pom.xml to 11
+mvn package
+
+
+### Issue access token for registered client on keycloak
+curl -k --location --request POST 'https://keycloak:8443/realms/mile/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id=milec' \
+--data-urlencode 'client_secret=GmZX9wJqpWDTuelggVf3sa6yBiFcxhsH' \
+--data-urlencode 'grant_type=client_credentials'
