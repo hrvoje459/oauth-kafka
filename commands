@@ -19,6 +19,7 @@ kafka-acls --add --allow-principal User:'alice' --bootstrap-server localhost:909
 
 KAFKA-SECURITY-MANAGER
 brew install sbt
+export JAVA_HOME=`/usr/libexec/java_home -v 17`
 
 sbt reload clean
 sbt compile
