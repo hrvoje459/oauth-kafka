@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'acls/**'
-    types: [opened, reopened, review_requested]
+    types: [opened, reopened, review_requested, review_request_removed]
 
 permissions:
   contents: read  # This is required for actions/checkout
