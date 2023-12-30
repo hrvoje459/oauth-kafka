@@ -13,3 +13,23 @@ users:
     groups:
       '*':
         - All
+  hrvoje:
+    topics:
+      hrvoje-kafka-100:
+        - Read
+      hrvoje-kafka-102:
+        - Write
+      hrvoje-kafka-103*:
+        - Describe
+    groups:
+      '*':
+        - All
+      'hrvojeva_grupa':
+        - All
+  pr_service_acc:
+    topics: 
+      pr-topic-101:
+        - All
+    groups:
+      '*':
+        - All
