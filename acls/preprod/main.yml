@@ -28,7 +28,7 @@ users:
         - All
   pr_service_acc:
     topics: 
-      pr-topic-101:
+      pr-topic-102:
         - All
     groups:
       '*':
