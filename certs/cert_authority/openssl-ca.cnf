@@ -50,7 +50,7 @@ organizationalUnitName         = Organizational Unit (eg, division)
 organizationalUnitName_default = FER
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
-commonName_default = default_cn
+commonName_default = ca.oauthkafka.xyz
 
 emailAddress         = Email Address
 emailAddress_default = hrvoje.rom@fer.hr

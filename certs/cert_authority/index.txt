@@ -1,4 +1,4 @@
-V	260922113437Z		01	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-1
-V	260922113450Z		02	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-2
-V	260922113457Z		03	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-3
-V	260922113503Z		04	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=keycloak
+V	261002193314Z		01	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-1.oauthkafka.xyz
+V	261002193321Z		02	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-2.oauthkafka.xyz
+V	261002193326Z		03	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=kafka-3.oauthkafka.xyz
+V	261002193333Z		04	unknown	/C=Unknown/ST=Unknown/L=Unknown/O=Unknown/OU=Unknown/CN=keycloak.oauthkafka.xyz
