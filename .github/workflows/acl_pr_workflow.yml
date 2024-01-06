@@ -33,7 +33,7 @@ jobs:
         echo ${{ github.ref }} 
 
   ksm-run:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
         #username: ${{ secrets.DOCKER_USERNAME }}
         #password: ${{ secrets.DOCKER_PASSWORD }}
         #registry: gcr.io
-        image: hrvoje45/custom-ksm:1.1.0
+        image: hrvoje45/custom-ksm:1.1.1
         options: --env KSM_READONLY="true"
         run: |
           /opt/docker/bin/kafka-security-manager
