@@ -43,7 +43,7 @@ jobs:
         #username: ${{ secrets.DOCKER_USERNAME }}
         #password: ${{ secrets.DOCKER_PASSWORD }}
         #registry: gcr.io
-        image: hrvoje45/custom-ksm:1.1.1
+        image: hrvoje45/custom-ksm:latest
         options: --env KSM_READONLY="true"
         run: /opt/docker/bin/kafka-security-manager
     
