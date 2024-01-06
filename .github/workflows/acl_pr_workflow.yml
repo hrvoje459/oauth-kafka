@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'acls/**'
+      - "*"
     types: [ opened, reopened, review_requested, review_request_removed]
   pull_request_review:
     types: [submitted, dismissed]
@@ -26,7 +27,7 @@ jobs:
           -H "Authorization: Bearer $GHA_TOKEN" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/2/requested_reviewers
-          
+
     - name: print ref
       run: |
         echo ${{ github.ref }} 
