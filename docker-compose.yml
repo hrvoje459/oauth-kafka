@@ -228,51 +228,51 @@ services:
 # #      - kafka-2
 # #      - kafka-3
 
-  # postgres_keycloak:
-  #   hostname: postgres_keycloak
-  #   image: postgres:15-alpine3.17
-  #   volumes:
-  #     - postgres_data_keycloak:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     POSTGRES_DB: keycloak
-  #     POSTGRES_USER: keycloak
-  #     POSTGRES_PASSWORD: Pa55word!
+  postgres_keycloak:
+    hostname: postgres_keycloak
+    image: postgres:15-alpine3.17
+    volumes:
+      - postgres_data_keycloak:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: Pa55word!
 
-  # keycloak:
-  #   hostname: keycloak
-  #   image: bitnami/keycloak:21.0.2
-  #   depends_on:
-  #     - postgres_keycloak
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "curl --fail -k https://keycloak:8443/auth/realms/master/.well-known/openid-configuration"]
-  #   ports:
-  #     - 8080:8080
-  #     - 8443:8443
-  #   volumes:
-  #     - ./certs/keycloak/keycloak_keystore.p12:/opt/bitnami/keycloak/certs/keystore.p12
-  #     - ./certs/cert_authority/client.truststore.p12:/opt/bitnami/keycloak/certs/truststore.p12
-  #   environment:
-  #     KEYCLOAK_DATABASE_VENDOR: postgresql
-  #     KEYCLOAK_DATABASE_HOST: postgres_keycloak
-  #     KEYCLOAK_DATABASE_NAME: keycloak
-  #     KEYCLOAK_DATABASE_USER: keycloak
-  #     KEYCLOAK_DATABASE_PASSWORD: Pa55word!
+  keycloak:
+    hostname: keycloak
+    image: bitnami/keycloak:21.0.2
+    depends_on:
+      - postgres_keycloak
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -k https://keycloak:8443/auth/realms/master/.well-known/openid-configuration"]
+    ports:
+      - 8080:8080
+      - 8443:8443
+    volumes:
+      - ./certs/keycloak/keycloak_keystore.p12:/opt/bitnami/keycloak/certs/keystore.p12
+      - ./certs/cert_authority/client.truststore.p12:/opt/bitnami/keycloak/certs/truststore.p12
+    environment:
+      KEYCLOAK_DATABASE_VENDOR: postgresql
+      KEYCLOAK_DATABASE_HOST: postgres_keycloak
+      KEYCLOAK_DATABASE_NAME: keycloak
+      KEYCLOAK_DATABASE_USER: keycloak
+      KEYCLOAK_DATABASE_PASSWORD: Pa55word!
 
-  #     KEYCLOAK_ADMIN_USER: admin
-  #     KEYCLOAK_ADMIN_PASSWORD: Pa55word!
-  #     KC_HTTP_RELATIVE_PATH: "/auth"
-  #     ### HTTPS
-  #     KEYCLOAK_ENABLE_HTTPS: true
-  #     #KEYCLOAK_HTTPS_PORT: 8443
-  #     KEYCLOAK_HTTPS_KEY_STORE_FILE: /opt/bitnami/keycloak/certs/keystore.p12
-  #     KEYCLOAK_HTTPS_TRUST_STORE_FILE: /opt/bitnami/keycloak/certs/truststore.p12
-  #     KEYCLOAK_HTTPS_KEY_STORE_PASSWORD: keycloak_keystore_password
-  #     KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD: truststore_password
-  #     #KEYCLOAK_HTTPS_USE_PEM: Set to true to configure HTTPS using PEM certificates'. Default: false.
-  #     #KEYCLOAK_HTTPS_CERTIFICATE_FILE: Path to the PEM certificate file (e.g. /opt/bitnami/keycloak/certs/tls.crt). No defaults.
-  #     #KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: Path to the PEM key file (e.g. /opt/bitnami/keycloak/certs/tls.key). No defaults
+      KEYCLOAK_ADMIN_USER: admin
+      KEYCLOAK_ADMIN_PASSWORD: Pa55word!
+      KC_HTTP_RELATIVE_PATH: "/auth"
+      ### HTTPS
+      KEYCLOAK_ENABLE_HTTPS: true
+      #KEYCLOAK_HTTPS_PORT: 8443
+      KEYCLOAK_HTTPS_KEY_STORE_FILE: /opt/bitnami/keycloak/certs/keystore.p12
+      KEYCLOAK_HTTPS_TRUST_STORE_FILE: /opt/bitnami/keycloak/certs/truststore.p12
+      KEYCLOAK_HTTPS_KEY_STORE_PASSWORD: keycloak_keystore_password
+      KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD: truststore_password
+      #KEYCLOAK_HTTPS_USE_PEM: Set to true to configure HTTPS using PEM certificates'. Default: false.
+      #KEYCLOAK_HTTPS_CERTIFICATE_FILE: Path to the PEM certificate file (e.g. /opt/bitnami/keycloak/certs/tls.crt). No defaults.
+      #KEYCLOAK_HTTPS_CERTIFICATE_KEY_FILE: Path to the PEM key file (e.g. /opt/bitnami/keycloak/certs/tls.key). No defaults
 
 
 
