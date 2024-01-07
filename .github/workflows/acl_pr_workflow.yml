@@ -94,3 +94,4 @@ jobs:
         pwd
         cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json
         cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json | jq
+        node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
