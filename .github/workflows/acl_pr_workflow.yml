@@ -82,5 +82,7 @@ jobs:
           --env-file /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
 
         # --env "ADMIN_CLIENT_SASL_JAAS_CONFIG='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule\ required'"
-        run: /opt/docker/bin/kafka-security-manager
+        run: |
+          ls
+          /opt/docker/bin/kafka-security-manager
     
