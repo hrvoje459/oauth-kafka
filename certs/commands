@@ -3,16 +3,16 @@
 # keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12
 
 
-keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-1
-keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-2
-keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-3
-keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:keycloak
+keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-1.oauthkafka.xyz
+keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-2.oauthkafka.xyz
+keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:kafka-3.oauthkafka.xyz
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -validity 700 -genkey -keyalg RSA -storetype pkcs12 -ext SAN=DNS:keycloak.oauthkafka.xyz
 
 
-keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -certreq -file ./broker_1/b1.csr -ext SAN=DNS:kafka-1
-keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -certreq -file ./broker_2/b2.csr -ext SAN=DNS:kafka-2
-keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -certreq -file ./broker_3/b3.csr -ext SAN=DNS:kafka-3
-keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -certreq -file ./keycloak/keycloak.csr -ext SAN=DNS:keycloak
+keytool -keystore ./broker_1/b1_keystore.p12 -alias kafka-1 -certreq -file ./broker_1/b1.csr -ext SAN=DNS:kafka-1.oauthkafka.xyz
+keytool -keystore ./broker_2/b2_keystore.p12 -alias kafka-2 -certreq -file ./broker_2/b2.csr -ext SAN=DNS:kafka-2.oauthkafka.xyz
+keytool -keystore ./broker_3/b3_keystore.p12 -alias kafka-3 -certreq -file ./broker_3/b3.csr -ext SAN=DNS:kafka-3.oauthkafka.xyz
+keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -certreq -file ./keycloak/keycloak.csr -ext SAN=DNS:keycloak.oauthkafka.xyz
 
 mkdir cert_authority
 cd cert_authority
@@ -56,8 +56,10 @@ keytool -keystore ./keycloak/keycloak_keystore.p12 -alias keycloak -import -file
 sudo keytool -import -trustcacerts -keystore /Users/hrvojerom/Library/Java/JavaVirtualMachines/openjdk-20/Contents/Home/lib/security/cacerts -storepass changeit -noprompt -alias fer-kafka-ca -file /Users/hrvojerom/faks/diplomski_projekt/oauth-kafka/certs/cert_authority/cacert.pem
 
 ### Maven must package for java version 11 of java, no need to select java version 11 just set maven compiler source and target in pom.xml to 11
+export JAVA_HOME=/opt/homebrew/opt/openjdk@11
 mvn package
 
+openssl pkcs12 -in client.truststore.p12 -out client.truststore.pem -nodes
 
 ### Issue access token for registered client on keycloak
 curl -k --location --request POST 'https://keycloak:8443/realms/mile/protocol/openid-connect/token' \

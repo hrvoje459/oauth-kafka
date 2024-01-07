@@ -1,0 +1,19 @@
+FROM --platform=linux/amd64 hrvoje45/kafka-security-manager:latest
+
+
+USER root
+
+WORKDIR /opt/workdir/
+#.crt file in the same folder as your Dockerfile
+ARG CERT="client.truststore.pem"
+
+RUN ls
+
+
+
+#import cert into java
+COPY "client.truststore.pem" $CERT /opt/workdir/
+RUN keytool -importcert -file /opt/workdir/$CERT -alias $CERT -cacerts -storepass changeit -noprompt
+
+ENTRYPOINT ["/opt/docker/bin/kafka-security-manager"]
+CMD []

@@ -26,3 +26,11 @@ sbt compile
 sbt clean assembly
 
 cat /etc/kafka/kafka.properties
+
+###HANDLERS
+export JAVA_HOME=/opt/homebrew/opt/openjdk@11
+
+
+
+# convert p12 to x509 
+openssl pkcs12 -in your_cert.p12 -out your_cert.pem -nodes
