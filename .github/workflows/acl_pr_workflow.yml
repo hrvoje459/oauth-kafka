@@ -64,9 +64,9 @@ jobs:
           --env NOTIFICATION_CLASS=io.conduktor.ksm.notification.ConsoleJsonNotification
           --env KSM_REFRESH_FREQUENCY_MS=-1
           --env TO_DO_FILE_DESTINATION=/opt/docker/bin/to_do.json
-          -v ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
+          -v ./acls/preprod:/opt/docker/acls/preprod:ro
           -v ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
-        #  --env ADMIN_CLIENT_SASL_JAAS_CONFIG=$ADMIN_CLIENT_SASL_JAAS_CONFIG_2
+          --env ADMIN_CLIENT_SASL_JAAS_CONFIG='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required'
         
         run: /opt/docker/bin/kafka-security-manager
       env:
