@@ -76,17 +76,17 @@ jobs:
           --env NOTIFICATION_CLASS=io.conduktor.ksm.notification.ConsoleJsonNotification
           --env KSM_REFRESH_FREQUENCY_MS=-1
           --env TO_DO_FILE_DESTINATION=/opt/docker/bin/output/to_do.json
-          -v /home/runner/work/oauth-kafka/acls/preprod:/opt/docker/acls/preprod:ro
-          -v /home/runner/work/oauth-kafka/certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
-          -v /home/runner/work/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/env_file.txt
+          -v /home/runner/work/oauth-kafka/oauth-kafka/acls/preprod:/opt/docker/acls/preprod:ro
+          -v /home/runner/work/oauth-kafka/oauth-kafka/certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+          -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
           -v /home/runner/work/oauth-kafka/output/:/opt/docker/bin/output
         run: |
           ls
           pwd
           echo $HOME
           ls /home/runner/work/oauth-kafka
-          cat /home/runner/work/oauth-kafka/env_file.txt
-          export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/env_file.txt)
+          cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
+          export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
           echo $ADMIN_CLIENT_SASL_JAAS_CONFIG
           /opt/docker/bin/kafka-security-manager
     - name: Check output file
