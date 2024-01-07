@@ -46,14 +46,6 @@ jobs:
     - name: Create env file
       run: |
         echo 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId="${{ secrets.KSM_CLIENT_ID}}" clientSecret="${{ secrets.KSM_CLIENT_SECRET}}" keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;' > env_file.txt
-        echo "Print env file"
-        cat env_file.txt 
-    - name: Check env file
-      run: |
-        pwd
-        cat env_file.txt
-        cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
-        echo $HOME
 
     - uses: addnab/docker-run-action@v3
       with:
@@ -81,17 +73,8 @@ jobs:
           -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
           -v /home/runner/work/oauth-kafka/oauth-kafka/output:/opt/docker/bin/output/
         run: |
-          ls
-          pwd
-          echo $HOME
-          ls /home/runner/work/oauth-kafka/oauth-kafka
-          cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
           export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
-          echo $ADMIN_CLIENT_SASL_JAAS_CONFIG
           /opt/docker/bin/kafka-security-manager
     - name: Check output file
       run: |
-        pwd
-        cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json
-        cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json | jq
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
