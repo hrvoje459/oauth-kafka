@@ -69,7 +69,4 @@ jobs:
           --env "ADMIN_CLIENT_SASL_JAAS_CONFIG=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required"
         
         run: /opt/docker/bin/kafka-security-manager
-      env:
-        ADMIN_CLIENT_SASL_JAAS_CONFIG_2: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=${{ secrets.KSM_CLIENT_ID }} clientSecret=${{ secrets.KSM_CLIENT_SECRET }} keycloak_instance=${{ secrets.KEYCLOAK_URL }} scope=profile;'
-        
     
