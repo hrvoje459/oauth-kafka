@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'acls/**'
-      - '*'
+      - '**'
     types: [ opened, reopened, review_requested, review_request_removed]
   pull_request_review:
     types: [submitted, dismissed]
