@@ -93,3 +93,4 @@ jobs:
       run: |
         pwd
         cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json
+        cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json | jq
