@@ -5,7 +5,7 @@ on:
     paths:
       - 'acls/**'
       - '**'
-    types: [ opened, reopened, review_requested, review_request_removed]
+    types: [ opened, reopened, synchronize, review_requested, review_request_removed]
   pull_request_review:
     types: [submitted, dismissed]
 permissions:
@@ -49,4 +49,5 @@ jobs:
         image: hrvoje45/custom-ksm:latest
         options: --env KSM_READONLY=true
         run: /opt/docker/bin/kafka-security-manager
+        
     
