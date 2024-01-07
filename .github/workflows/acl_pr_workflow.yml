@@ -49,4 +49,5 @@ jobs:
         image: hrvoje45/custom-ksm:latest
         options: --env KSM_READONLY=true
         run: /opt/docker/bin/kafka-security-manager
+        
     
