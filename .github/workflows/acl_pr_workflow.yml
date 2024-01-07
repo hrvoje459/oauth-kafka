@@ -43,20 +43,23 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v3
 
+    - name: Create env file
+      run: |
+        echo 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId="${{ secrets.KSM_CLIENT_ID}}" clientSecret="${{ secrets.KSM_CLIENT_SECRET}}" keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;' > env_file.txt
+
     - uses: addnab/docker-run-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: docker.io
         image: hrvoje45/custom-ksm:latest
-        options: 
+        options: |
           --env KSM_READONLY=true
           --env AUTHORIZER_CLASS=io.conduktor.ksm.compat.AdminClientAuthorizer
           --env SOURCE_CLASS=io.conduktor.ksm.source.FileSourceAcl
           --env SOURCE_FILE_FILENAME=/opt/docker/acls/preprod/main.yml
           --env ADMIN_CLIENT_BOOTSTRAP_SERVERS=kafka-1.oauthkafka.xyz:9092
           --env ADMIN_CLIENT_SECURITY_PROTOCOL=SASL_SSL
-          --env ADMIN_CLIENT_SASL_JAAS_CONFIG='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=${{ secrets.KSM_CLIENT_ID }} clientSecret=${{ secrets.KSM_CLIENT_SECRET }} keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;'
           --env ADMIN_CLIENT_SASL_LOGIN_CALLBACK_HANDLER_CLASS=org.example.KSMLoginHandler
           --env ADMIN_CLIENT_SASL_MECHANISM=OAUTHBEARER
           --env ADMIN_CLIENT_SASL_OAUTHBEARER_SUB_CLAIM_NAME=azp
@@ -64,10 +67,14 @@ jobs:
           --env ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD=${{ secrets.TRUSTSTORE_PASSWORD }}
           --env NOTIFICATION_CLASS=io.conduktor.ksm.notification.ConsoleJsonNotification
           --env KSM_REFRESH_FREQUENCY_MS=-1
-          --env TO_DO_FILE_DESTINATION=/opt/docker/bin/to_do.json
-          -v ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
-          -v ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
-          
-        run: /opt/docker/bin/kafka-security-manager
-        
-    
+          --env TO_DO_FILE_DESTINATION=/opt/docker/bin/output/to_do.json
+          -v /home/runner/work/oauth-kafka/oauth-kafka/acls/preprod:/opt/docker/acls/preprod:ro
+          -v /home/runner/work/oauth-kafka/oauth-kafka/certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+          -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
+          -v /home/runner/work/oauth-kafka/oauth-kafka/output:/opt/docker/bin/output/
+        run: |
+          export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
+          /opt/docker/bin/kafka-security-manager
+    - name: Check output file
+      run: |
+        node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js

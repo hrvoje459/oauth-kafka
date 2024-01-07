@@ -3,6 +3,8 @@ users:
     topics:
       ZEMRIS_topic_123:
         - All
+      ZEMRIS_topic_567:
+        - All
     groups:
       'ZEMRIS_cg_*':
         - All
