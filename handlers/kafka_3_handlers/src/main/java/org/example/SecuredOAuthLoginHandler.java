@@ -228,9 +228,6 @@ public class SecuredOAuthLoginHandler implements AuthenticateCallbackHandler {
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-
-        log.info("Login handler Checkpoint 3");
-
         checkInitialized();
 
         for (Callback callback : callbacks) {
@@ -245,15 +242,8 @@ public class SecuredOAuthLoginHandler implements AuthenticateCallbackHandler {
     }
 
     private void handleTokenCallback(OAuthBearerTokenCallback callback) throws IOException {
-
-        log.info("Login handler Checkpoint 4 ");
-
         checkInitialized();
         String accessToken = accessTokenRetriever.retrieve();
-
-
-        log.info("Login handler Checkpoint 5 token:  {}", accessToken);
-        System.out.println("Login handler pRINT Checkpoint 5 token: ");
 
         try {
             OAuthBearerToken token = accessTokenValidator.validate(accessToken);

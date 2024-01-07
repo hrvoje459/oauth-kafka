@@ -23,12 +23,8 @@ import org.apache.kafka.common.security.oauthbearer.OAuthBearerToken;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerValidatorCallback;
 import org.apache.kafka.common.security.oauthbearer.internals.secured.AccessTokenValidator;
 import org.apache.kafka.common.security.oauthbearer.internals.secured.AccessTokenValidatorFactory;
-import org.apache.kafka.common.security.oauthbearer.internals.secured.BasicOAuthBearerToken;
 import org.apache.kafka.common.security.oauthbearer.internals.secured.ValidateException;
 import org.apache.kafka.common.security.oauthbearer.internals.unsecured.*;
-import org.apache.kafka.common.utils.Time;
-import org.apache.kafka.common.utils.Utils;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,25 +79,10 @@ import java.util.*;
  */
 public class SecuredOAuthValidationHandler implements AuthenticateCallbackHandler {
     private static final Logger log = LoggerFactory.getLogger(SecuredOAuthValidationHandler.class);
-    private static final String OPTION_PREFIX = "unsecuredValidator";
-    private static final String PRINCIPAL_CLAIM_NAME_OPTION = OPTION_PREFIX + "PrincipalClaimName";
-    private static final String SCOPE_CLAIM_NAME_OPTION = OPTION_PREFIX + "ScopeClaimName";
-    private static final String REQUIRED_SCOPE_OPTION = OPTION_PREFIX + "RequiredScope";
-    private static final String ALLOWABLE_CLOCK_SKEW_MILLIS_OPTION = OPTION_PREFIX + "AllowableClockSkewMs";
-    private Time time = Time.SYSTEM;
     private Map<String, String> moduleOptions = null;
     private boolean configured = false;
 
     private AccessTokenValidator accessTokenValidator;
-    /**
-     * For testing
-     *
-     * @param time
-     *            the mandatory time to set
-     */
-    void time(Time time) {
-        this.time = Objects.requireNonNull(time);
-    }
 
     /**
      * Return true if this instance has been configured, otherwise false
@@ -115,7 +96,6 @@ public class SecuredOAuthValidationHandler implements AuthenticateCallbackHandle
     @SuppressWarnings("unchecked")
     @Override
     public void configure(Map<String, ?> configs, String saslMechanism, List<AppConfigurationEntry> jaasConfigEntries) {
-        System.out.println("Validator handler Checkpoint 1");
         if (!OAuthBearerLoginModule.OAUTHBEARER_MECHANISM.equals(saslMechanism))
             throw new IllegalArgumentException(String.format("Unexpected SASL mechanism: %s", saslMechanism));
         if (Objects.requireNonNull(jaasConfigEntries).size() != 1 || jaasConfigEntries.get(0) == null)
@@ -132,8 +112,6 @@ public class SecuredOAuthValidationHandler implements AuthenticateCallbackHandle
 
     @Override
     public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
-        log.info("Validator handler Successfully validated token with principal {}: {}", "Primosten",
-                "Rovinj");
         if (!configured())
             throw new IllegalStateException("Callback handler not configured");
         for (Callback callback : callbacks) {
@@ -161,118 +139,16 @@ public class SecuredOAuthValidationHandler implements AuthenticateCallbackHandle
     }
 
     private void handleCallback(OAuthBearerValidatorCallback callback) {
-        System.out.println("Checkpoint 3");
-        //log.info("Validator handler Checkpoint 3 token: {}", callback.tokenValue());
-        String tokenValue = callback.tokenValue();;
-        //log.info("Validator handler Checkpoint 4");
+        String tokenValue = callback.tokenValue();
         if (tokenValue == null)
             throw new IllegalArgumentException("Callback missing required token value");
-        String principalClaimName = principalClaimName();
-        //log.info("Validator handler Checkpoint 5");
-        //String scopeClaimName = scopeClaimName();
-        //List<String> requiredScope = requiredScope();
-        //log.info("Checkpoint 6");
-        //int allowableClockSkewMs = allowableClockSkewMs();
 
-
-
-        //log.info("Validator handler Checkpoint 7");
-
-
-        if(/*callback.tokenValue().split("\\.").length == 2*/false){
-
-            //log.info("Validator handler Checkpoint 8");
-
-            //OAuthBearerUnsecuredJws unsecuredJwt = new OAuthBearerUnsecuredJws(tokenValue, principalClaimName,
-            //        scopeClaimName);
-            //long now = time.milliseconds();
-            //OAuthBearerValidationUtils
-            //        .validateClaimForExistenceAndType(unsecuredJwt, true, principalClaimName, String.class)
-            //        .throwExceptionIfFailed();
-            //OAuthBearerValidationUtils.validateIssuedAt(unsecuredJwt, false, now, allowableClockSkewMs)
-            //        .throwExceptionIfFailed();
-            //OAuthBearerValidationUtils.validateExpirationTime(unsecuredJwt, now, allowableClockSkewMs)
-            //        .throwExceptionIfFailed();
-            //OAuthBearerValidationUtils.validateTimeConsistency(unsecuredJwt).throwExceptionIfFailed();
-            //OAuthBearerValidationUtils.validateScope(unsecuredJwt, requiredScope).throwExceptionIfFailed();
-            //log.info("Successfully validated token with principal {}: {}", unsecuredJwt.principalName(),
-            //        unsecuredJwt.claims());
-
-            //callback.token(unsecuredJwt);
-        }else {
-
-            log.info("Validator handler Checkpoint 9");
-
-            byte[] decodedBytes = Base64.getDecoder().decode(callback.tokenValue().split("\\.")[1]);
-            String decodedString = new String(decodedBytes);
-            JSONObject jo = new JSONObject(decodedString);
-            //System.out.println(jo.get("alg"));
-
-            /*BasicOAuthBearerToken mojToken = new BasicOAuthBearerToken(
-                    callback.tokenValue(),
-                    Set.of(jo.get("scope").toString().split(" ")),
-                    Long.parseLong(jo.get("exp").toString()) * 1000, //lifetime,
-                    //use client(service-account) name as a principal instead of jwt sub(subject) (user friendlier)
-                    jo.get(principalClaimName).toString(), //jo.get("sub").toString()
-                    Long.parseLong(jo.get("iat").toString()) * 1000
-            );*/
-
-            try {
-                OAuthBearerToken token = accessTokenValidator.validate(callback.tokenValue());
-                callback.token(token);
-            } catch (ValidateException e) {
-                log.warn(e.getMessage(), e);
-                callback.error("invalid_token validity", e.getMessage(), null);
-            }
-
-
-
-
-
-            //log.info("Validator handler Checkpoint 10 token: {}", mojToken);
-
-            //callback.token(mojToken);
-        }
-
-        log.info("Validator handler Checkpoint 11");
-
-
-
-    }
-
-    private String principalClaimName() {
-        String principalClaimNameValue = option(PRINCIPAL_CLAIM_NAME_OPTION);
-        return Utils.isBlank(principalClaimNameValue) ? "sub" : principalClaimNameValue.trim();
-    }
-
-    private String scopeClaimName() {
-        String scopeClaimNameValue = option(SCOPE_CLAIM_NAME_OPTION);
-        return Utils.isBlank(scopeClaimNameValue) ? "scope" : scopeClaimNameValue.trim();
-    }
-
-    private List<String> requiredScope() {
-        String requiredSpaceDelimitedScope = option(REQUIRED_SCOPE_OPTION);
-        return Utils.isBlank(requiredSpaceDelimitedScope) ? Collections.emptyList() : OAuthBearerScopeUtils.parseScope(requiredSpaceDelimitedScope.trim());
-    }
-
-    private int allowableClockSkewMs() {
-        String allowableClockSkewMsValue = option(ALLOWABLE_CLOCK_SKEW_MILLIS_OPTION);
-        int allowableClockSkewMs = 0;
         try {
-            allowableClockSkewMs = Utils.isBlank(allowableClockSkewMsValue) ? 0 : Integer.parseInt(allowableClockSkewMsValue.trim());
-        } catch (NumberFormatException e) {
-            throw new OAuthBearerConfigException(e.getMessage(), e);
+            OAuthBearerToken token = accessTokenValidator.validate(callback.tokenValue());
+            callback.token(token);
+        } catch (ValidateException e) {
+            log.warn(e.getMessage(), e);
+            callback.error("invalid_token", e.getMessage(), null);
         }
-        if (allowableClockSkewMs < 0) {
-            throw new OAuthBearerConfigException(
-                    String.format("Allowable clock skew millis must not be negative: %s", allowableClockSkewMsValue));
-        }
-        return allowableClockSkewMs;
-    }
-
-    private String option(String key) {
-        if (!configured)
-            throw new IllegalStateException("Callback handler not configured");
-        return moduleOptions.get(Objects.requireNonNull(key));
     }
 }
