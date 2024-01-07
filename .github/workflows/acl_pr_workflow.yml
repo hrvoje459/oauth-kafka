@@ -82,13 +82,7 @@ jobs:
           -v /home/runner/work/oauth-kafka/oauth-kafka/output/:/opt/docker/bin/output
         ### DOUBLE "oauth-kafka" in paths are not errors
         run: |
-          ls
-          pwd
-          echo $HOME
-          ls /home/runner/work/oauth-kafka
-          cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
           export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
-          echo $ADMIN_CLIENT_SASL_JAAS_CONFIG
           /opt/docker/bin/kafka-security-manager
     - name: Check output file
       run: |
