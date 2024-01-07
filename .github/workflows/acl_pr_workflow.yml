@@ -31,6 +31,9 @@ jobs:
     - name: print ref
       run: |
         echo ${{ github.ref }} 
+        echo ${{ github.event.pull_request.number }}
+        echo ${{ github.event.number }}
+        echo ${{ github.event.issue.number }}
 
   ksm-run:
     runs-on: ubuntu-latest
