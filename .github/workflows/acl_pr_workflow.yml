@@ -49,7 +49,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: docker.io
         image: hrvoje45/custom-ksm:latest
-        options: 
+        options: | 
           --env KSM_READONLY=true
           --env AUTHORIZER_CLASS=io.conduktor.ksm.compat.AdminClientAuthorizer
           --env SOURCE_CLASS=io.conduktor.ksm.source.FileSourceAcl
