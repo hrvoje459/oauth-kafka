@@ -53,6 +53,7 @@ jobs:
         pwd
         cat env_file.txt
         cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
+        echo $HOME
 
     - uses: addnab/docker-run-action@v3
       with:
