@@ -79,7 +79,8 @@ jobs:
           -v /home/runner/work/oauth-kafka/oauth-kafka/acls/preprod:/opt/docker/acls/preprod:ro
           -v /home/runner/work/oauth-kafka/oauth-kafka/certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
           -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
-          -v /home/runner/work/oauth-kafka/output/:/opt/docker/bin/output
+          -v /home/runner/work/oauth-kafka/oauth-kafka/output/:/opt/docker/bin/output
+        ### DOUBLE "oauth-kafka" in paths are not errors
         run: |
           ls
           pwd
