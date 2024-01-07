@@ -1,7 +1,7 @@
 users:
   alice:
     topics:
-      oauth-topic-97:
+      oauth-topic-98:
         - All
     groups:
       '*':
