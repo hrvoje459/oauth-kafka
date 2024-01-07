@@ -79,7 +79,7 @@ jobs:
           -v /home/runner/work/oauth-kafka/oauth-kafka/acls/preprod:/opt/docker/acls/preprod:ro
           -v /home/runner/work/oauth-kafka/oauth-kafka/certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
           -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
-          -v /home/runner/work/oauth-kafka/oauth-kafka/to_do.json:/opt/docker/bin/to_do.json
+          -v /home/runner/work/oauth-kafka/oauth-kafka/output/:/opt/docker/bin/
         run: |
           ls
           pwd
@@ -92,4 +92,4 @@ jobs:
     - name: Check output file
       run: |
         pwd
-        cat /home/runner/work/oauth-kafka/oauth-kafka/to_do.json
+        cat /home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json
