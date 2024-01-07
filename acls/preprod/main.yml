@@ -1,35 +1,26 @@
 users:
-  alice:
+  ZEMRIS_service_acc_1:
     topics:
-      oauth-topic-98:
+      ZEMRIS_topic_1233:
         - All
     groups:
-      '*':
+      'ZEMRIS_cg_*':
         - All
-  bob:
+  ZPR_velika_racunica:
     topics:
-      oauth-kafka-98:
+      ZPR_mega_output_99:
         - All
     groups:
-      '*':
+      'ZPR_*':
         - All
-  hrvoje:
+  AVRS_petar_paukovic:
     topics:
-      hrvoje-kafka-100:
-        - Read
-      hrvoje-kafka-102:
-        - Write
-      hrvoje-kafka-103*:
-        - Describe
-    groups:
-      '*':
+      AVRS_shield_hq:
         - All
-      'hrvojeva_grupa':
+      AVRS_hydra_monitoring:
         - All
-  pr_service_acc:
-    topics: 
-      pr-topic-102:
+      AVRS_hero_status:
         - All
     groups:
-      '*':
+      'AVRS_group_':
         - All
