@@ -64,7 +64,7 @@ jobs:
           --env NOTIFICATION_CLASS=io.conduktor.ksm.notification.ConsoleJsonNotification
           --env KSM_REFRESH_FREQUENCY_MS=-1
           --env TO_DO_FILE_DESTINATION=/opt/docker/bin/to_do.json
-          --env ADMIN_CLIENT_SASL_JAAS_CONFIG=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=${{ secrets.KSM_CLIENT_ID }} clientSecret=${{ secrets.KSM_CLIENT_SECRET }} keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;
+          --env ADMIN_CLIENT_SASL_JAAS_CONFIG="org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=${{ secrets.KSM_CLIENT_ID }} clientSecret=${{ secrets.KSM_CLIENT_SECRET }} keycloak_instance=\"https://keycloak.oauthkafka.xyz:8443\" scope=profile;"
         #   -v ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
         #   -v ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
           
