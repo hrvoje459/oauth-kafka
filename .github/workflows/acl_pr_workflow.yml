@@ -85,7 +85,7 @@ jobs:
           echo $HOME
           ls /home/runner/work/oauth-kafka/oauth-kafka
           cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
-          export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat env_file.txt)
+          export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
           echo $ADMIN_CLIENT_SASL_JAAS_CONFIG
           /opt/docker/bin/kafka-security-manager
     
