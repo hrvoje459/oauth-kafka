@@ -1,7 +1,7 @@
 users:
   ZEMRIS_service_acc_1:
     topics:
-      ZEMRIS_topic_1233:
+      ZEMRIS_topic_123:
         - All
     groups:
       'ZEMRIS_cg_*':
