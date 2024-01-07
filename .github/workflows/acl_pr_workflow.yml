@@ -77,7 +77,7 @@ jobs:
           -v /acls/preprod:/opt/docker/acls/preprod:ro
           -v /certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
           -v /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt:/env_file.txt
-          --env-file /env_file.txt
+          --env-file /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt
 
         # --env "ADMIN_CLIENT_SASL_JAAS_CONFIG='org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule\ required'"
         run: /opt/docker/bin/kafka-security-manager
