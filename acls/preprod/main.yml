@@ -5,8 +5,8 @@ users:
         - All
       ZEMRIS_topic_567:
         - All
-      ZPR_mega_output_99:
-        - Read
+      AVRS_hero_status:
+        - All
     groups:
       'ZEMRIS_cg_*':
         - All
