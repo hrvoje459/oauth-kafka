@@ -34,6 +34,8 @@ jobs:
         echo ${{ github.event.pull_request.number }}
         echo ${{ github.event.number }} 
         echo ${{ github.event.issue.number }}
+      env: 
+        PR_NUMBER: ${{ github.event.number }} 
 
       ### use third or fourth option in api calls
 
@@ -52,7 +54,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: docker.io
-        image: hrvoje45/custom-ksm:latest
+        image: hrvoje45/custom-ksm:1.1.2
         options: |
           --env KSM_READONLY=true
           --env AUTHORIZER_CLASS=io.conduktor.ksm.compat.AdminClientAuthorizer
@@ -75,6 +77,6 @@ jobs:
         run: |
           export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
           /opt/docker/bin/kafka-security-manager
-    - name: Check output file
+    - name: Check required approvals
       run: |
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
