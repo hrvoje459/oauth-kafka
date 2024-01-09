@@ -34,13 +34,14 @@ jobs:
         echo ${{ github.event.pull_request.number }}
         echo ${{ github.event.number }} 
         echo ${{ github.event.issue.number }}
-      env: 
-        PR_NUMBER: ${{ github.event.number }} 
+      
 
       ### use third or fourth option in api calls
 
   ksm-run:
     runs-on: ubuntu-latest
+    env: 
+      PR_NUMBER: ${{ github.event.number }} 
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
