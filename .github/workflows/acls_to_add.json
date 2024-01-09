@@ -1,0 +1,17 @@
+[
+    {
+        "action" : "ADD",
+        "principal" : {
+          "principal_type" : "User",
+          "principal_name" : "ZEMRIS_service_acc_1"
+        },
+        "operation" : "Read",
+        "permission_type" : "Allow",
+        "host" : "*",
+        "resource" : {
+          "resource_type" : "Topic",
+          "resource_name" : "ZKIST_raketni_sustav",
+          "pattern_type" : "LITERAL"
+        }
+      }
+]

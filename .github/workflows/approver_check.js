@@ -94,6 +94,7 @@ async function approverSetList(prefix_approver_map, requiredPrefixApprovals) {
 
 async function getApprovalsForPR(){
   let PR_NUMBER = process.env.PR_NUMBER
+  console.log(process.env.PR_NUMBER)
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/requested_reviewers").
     then(response => response.json())
   console.log(result)
