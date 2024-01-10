@@ -14,6 +14,8 @@ users:
     topics:
       ZPR_mega_output_99:
         - All
+      AVRS_shield_hq:
+        - All
     groups:
       'ZPR_*':
         - All
