@@ -8,12 +8,12 @@ console.log("Hello, World!");
 const acls = 'acls_to_add.json';
 const meta_table_url = 'https://raw.githubusercontent.com/hrvoje459/oauth-kafka/main/kafka-meta-table.csv';
 let headers = new Headers();
-headers.append('Authorization', 'Bearer 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');
+headers.append('Authorization', 'Bearer ');
 headers.append("Content-Type", "application/json")
 
 
 
-const fileName = '/home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json';
+//const fileName = '/home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json';
 
 /*fs.readFile(fileName, 'utf8', (err, data) => {
     if (err) {
