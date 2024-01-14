@@ -1,5 +1,5 @@
 
-const fs = require('fs');
+const fs = require('fs').promises;
 
 
 console.log("Hello, World!");
@@ -38,6 +38,26 @@ headers.append("Content-Type", "application/json")
   fields.push(currentField.trim());
   return fields;
 }*/
+
+function parseCSVRow(csvRow) {
+  const fields = [];
+  let currentField = '';
+  let insideQuotes = false;
+
+  for (const char of csvRow) {
+      if (char === '"') {
+          insideQuotes = !insideQuotes;
+      } else if (char === ',' && !insideQuotes) {
+          fields.push(currentField.trim());
+          currentField = '';
+      } else {
+          currentField += char;
+      }
+  }
+
+  fields.push(currentField.trim());
+  return fields;
+}
 
 
 async function populate_prefix_approver_map() {
@@ -109,7 +129,7 @@ async function approverSetList(prefix_approver_map, requiredPrefixApprovals) {
 async function getRequestedApprovers() {
   let PR_NUMBER = process.env.PR_NUMBER
   if (process.env.PR_NUMBER == undefined) {
-    PR_NUMBER = 7
+    PR_NUMBER = 8
   }
   let requestedApprovers = [];
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/requested_reviewers", { headers: headers }).
@@ -125,7 +145,7 @@ async function getRequestedApprovers() {
 async function getPullRequestOpener() {
   let PR_NUMBER = process.env.PR_NUMBER
   if (process.env.PR_NUMBER == undefined) {
-    PR_NUMBER = 7
+    PR_NUMBER = 8
   }
 
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers }).
@@ -136,7 +156,7 @@ async function getPullRequestOpener() {
 async function getPrApprovals() {
   let PR_NUMBER = process.env.PR_NUMBER
   if (process.env.PR_NUMBER == undefined) {
-    PR_NUMBER = 7
+    PR_NUMBER = 8
   }
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/reviews", { headers: headers }).
     then(response => response.json())
@@ -164,20 +184,22 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
 
 
 
-  let temp_approver_array = new Set()
+  let temp_approver_set = new Set()
   approverSetList.forEach(approverSet => {
     approverSet.forEach(approver => {
-      temp_approver_array.add(approver)
+      temp_approver_set.add(approver)
     });
   });
 
 
   existingRequestedApprovers.forEach(existingReviewer => {
-    if(!temp_approver_array.has(existingReviewer)){
+    if(!temp_approver_set.has(existingReviewer)){
       console.log("OVAJ NAM NE TREBA ", existingReviewer)
-      let body = JSON.stringify({"reviewers" : existingReviewer})
+      let temp_array = []
+      temp_array.push(existingReviewer)
+      let body = JSON.stringify({"reviewers" : temp_array})
       console.log("BODY: ", body)
-      let PR_NUMBER = 7
+      let PR_NUMBER = 8
       const result = fetch(
         "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/requested_reviewers", 
       { 
@@ -191,12 +213,12 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
     }
   });
 
-  console.log("APPROVERS ", temp_approver_array)
+  console.log("APPROVERS ", temp_approver_set)
 
-  let approverArray =  Array.from(temp_approver_array.keys())
+  let approverArray =  Array.from(temp_approver_set.keys())
   let body = JSON.stringify({"reviewers" : approverArray})
   console.log("BODY: ", body)
-  let PR_NUMBER = 7
+  let PR_NUMBER = 8
   const result = await fetch(
     "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/requested_reviewers", 
     { 
@@ -206,25 +228,7 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
     }
   ).then(response => response.json()
   ).then(response => console.log("RESULT REQUEST PR: ", response))
-  
-/*
-  approverSetList.forEach(element => {
-    let approverArray =  Array.from(element.keys())
-    let body = JSON.stringify({"reviewers" : approverArray})
-    console.log("BODY: ", body)
-    let PR_NUMBER = 7
-    const result = fetch(
-      "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/requested_reviewers", 
-      { 
-        method: "POST", 
-        headers: headers,
-        body: body
-      }
-    ).then(response => response.json()
-    ).then(response => console.log("RESULT REQUEST PR: ", response))
-    
 
-  });*/
   console.log("A WAIT")
 }
 
