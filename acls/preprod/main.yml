@@ -6,7 +6,7 @@ users:
     groups:
       '*':
         - All
-  ZKIST_raketni_sustav:
+  BYS_test_SA:
     topics:
       BYS_headquaters_pa:
         - Read
