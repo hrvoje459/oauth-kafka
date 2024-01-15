@@ -16,6 +16,7 @@ let PR_NUMBER = process.env.PR_NUMBER
 if (process.env.PR_NUMBER == undefined) {
   PR_NUMBER = 8
 }
+console.log("PR NUMBER: ", PR_NUMBER)
 
 //const fileName = '/home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json';
 
