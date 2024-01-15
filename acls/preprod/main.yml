@@ -6,10 +6,3 @@ users:
     groups:
       '*':
         - All
-  ZKIST_raketni_sustav:
-    topics:
-      'ZPR_velika_racunica':
-        - All
-    groups:
-      'ZPR_*':
-        - All
