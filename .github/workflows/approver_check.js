@@ -90,8 +90,9 @@ async function populate_prefix_approver_map() {
 
 async function fetchRequiredPrefixes() {
   const requiredPrefixes = new Set();
-  const result = await fs.readFile(acls, 'utf8')
   try {
+    const result = await fs.readFile(acls, 'utf8')
+
     // Parse the JSON data
     const jsonData = JSON.parse(result);
 
@@ -116,6 +117,7 @@ async function fetchRequiredPrefixes() {
     // Access and print specific properties
     //console.log('Message:', jsonData);
   } catch (jsonError) {
+    requiredPrefixes.add("")
     console.error(`Error parsing JSON from file ${fileName}:`, jsonError);
   }
 
