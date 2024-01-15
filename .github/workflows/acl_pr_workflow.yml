@@ -80,4 +80,4 @@ jobs:
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
       env:
         GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
-        PR_NUMBER: ${{ github.event.number }}
+        PR_NUMBER: ${{ github.event.issue.number }}
