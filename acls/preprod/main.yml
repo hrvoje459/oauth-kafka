@@ -6,10 +6,10 @@ users:
     groups:
       '*':
         - All
-  BYS_test_SA:
+  ZPR_velika_racunica:
     topics:
-      BYS_headquaters_pa:
-        - Read
+      ZPR_veliko_racunanje:
+        - All
     groups:
-      'BYS_cg_*':
+      'ZPR_consumers_*':
         - All
