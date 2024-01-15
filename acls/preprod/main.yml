@@ -11,5 +11,5 @@ users:
       BYS_headquaters_pa:
         - Read
     groups:
-      'ZKIST_cg_*':
+      'BYS_cg_*':
         - All
