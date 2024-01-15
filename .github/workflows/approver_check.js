@@ -66,7 +66,7 @@ async function populate_prefix_approver_map() {
   await fetch(meta_table_url, { headers: headers })
     .then(response => response.text())
     .then(data => {
-      console.log(data)
+      console.log("META: " + data + meta_table_url)
       let rows = data.split("\n");
       for (let i = 0; i < rows.length; i++) {
         let parsed_row = parseCSVRow(rows[i])
