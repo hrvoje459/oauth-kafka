@@ -147,7 +147,7 @@ async function getRequestedApprovers() {
 async function getPullRequestOpener() {
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers }).
     then(response => response.json())
-  console.log("OPENER:", result)
+  console.log("OPENER:", result, "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER)
   return result.user.login
 }
 
