@@ -158,7 +158,7 @@ async function getPrApprovals() {
     then(response => response.json())
   let mapOfReviews = new Map();
 
-  const pr_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/reviews", { headers: headers }).
+  const pr_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers }).
   then(response => response.json())
   
   console.log("PR DETALJI", pr_details)
@@ -166,7 +166,9 @@ async function getPrApprovals() {
   result.forEach(element => {
     if (element.state == "CHANGES_REQUESTED" || element.state == "APPROVED") {
       mapOfReviews.set(element.user.login, element.state)
-      console.log("PR REVIEW LOOKING FOR COMMIT SHA", element)
+      console.log("USER OF APPROVAL", element.user.login)
+      console.log("STATE OF APPROVAL", element.state)
+      console.log("TIME OF APPROVAL", element.submitted_at)
     }
   });
 
