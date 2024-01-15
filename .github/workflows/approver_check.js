@@ -118,7 +118,7 @@ async function fetchRequiredPrefixes() {
     //console.log('Message:', jsonData);
   } catch (jsonError) {
     requiredPrefixes.add("")
-    console.error(`Error parsing JSON from file ${fileName}:`, jsonError);
+    console.error(`Error parsing JSON from file ${acls}:`, jsonError);
   }
 
   return requiredPrefixes
