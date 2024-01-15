@@ -80,5 +80,7 @@ jobs:
         GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
         PR_NUMBER: ${{ github.event.issue.number }}
       run: |
+        echo $PR_NUMBER
+        echo ${{ github.event.issue.number }}
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
 
