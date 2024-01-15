@@ -75,9 +75,10 @@ jobs:
         run: |
           export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
           /opt/docker/bin/kafka-security-manager
-    - name: Check output file
-      run: |
-        node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
+    - name: Check output file      
       env:
         GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
         PR_NUMBER: ${{ github.event.issue.number }}
+      run: |
+        node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
+
