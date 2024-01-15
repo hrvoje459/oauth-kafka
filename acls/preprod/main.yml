@@ -1,2 +1,8 @@
 users:
-
+  ADM_maintainer:
+    topics:
+      '*':
+        - All
+    groups:
+      '*':
+        - All
