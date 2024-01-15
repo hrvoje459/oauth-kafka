@@ -6,3 +6,10 @@ users:
     groups:
       '*':
         - All
+  ZKIST_raketni_sustav:
+    topics:
+      BYS_headquaters_pa:
+        - Read
+    groups:
+      'ZKIST_cg_*':
+        - All
