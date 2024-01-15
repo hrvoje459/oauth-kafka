@@ -260,7 +260,7 @@ async function approvalProcess() {
     const approvals = await getPrApprovals()
     console.log("Approvals given", approvals)
     approvals.forEach(approval => {
-      approverSet.filter(
+      approverSet = approverSet.filter(
         element => !element.has(approval)
       )
     });
