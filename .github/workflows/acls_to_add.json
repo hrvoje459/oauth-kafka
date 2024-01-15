@@ -1,0 +1,17 @@
+[
+  {
+    "action" : "ADD",
+    "principal" : {
+      "principal_type" : "User",
+      "principal_name" : "BYS__velika_racunica"
+    },
+    "operation" : "All",
+    "permission_type" : "Allow",
+    "host" : "*",
+    "resource" : {
+      "resource_type" : "Topic",
+      "resource_name" : "BYS__shield_hq",
+      "pattern_type" : "LITERAL"
+    }
+  }
+]
