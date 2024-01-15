@@ -149,7 +149,7 @@ async function getRequestedApprovers() {
 async function getPullRequestOpener() {
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers }).
     then(response => response.json())
-  console.log("OPENER:", result, "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER)
+  //console.log("OPENER:", result, "https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER)
   return result.user.login
 }
 
@@ -158,9 +158,15 @@ async function getPrApprovals() {
     then(response => response.json())
   let mapOfReviews = new Map();
 
+  const pr_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/reviews", { headers: headers }).
+  then(response => response.json())
+  
+  console.log("PR DETALJI", pr_details)
+
   result.forEach(element => {
     if (element.state == "CHANGES_REQUESTED" || element.state == "APPROVED") {
       mapOfReviews.set(element.user.login, element.state)
+      console.log("PR REVIEW LOOKING FOR COMMIT SHA", element)
     }
   });
 
@@ -204,7 +210,7 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
         body: body
       }
       ).then(response => response.json()
-      ).then(response => console.log("RESULT DELETE PR APPROVER: ", response))
+      ).then(response => console.log("RESULT DELETE PR APPROVER: "/*, response*/))
   
     }
   });
