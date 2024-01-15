@@ -77,4 +77,7 @@ jobs:
           /opt/docker/bin/kafka-security-manager
     - name: Check output file
       run: |
+        curl https://raw.githubusercontent.com/hrvoje459/oauth-kafka/main/kafka-meta-table.csv
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
+      env:
+        GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
