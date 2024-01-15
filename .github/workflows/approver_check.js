@@ -8,7 +8,8 @@ const acls = '/home/runner/work/oauth-kafka/oauth-kafka/output/to_do.json';
 //const acls = 'acls_to_add.json';
 const meta_table_url = 'https://raw.githubusercontent.com/hrvoje459/oauth-kafka/main/kafka-meta-table.csv';
 let headers = new Headers();
-headers.append('Authorization', 'Bearer ');
+//headers.append('Authorization', 'Bearer ');
+headers.append('Authorization', 'Bearer '+ process.env.GHA_TOKEN);
 headers.append("Content-Type", "application/json")
 
 
