@@ -247,6 +247,7 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
   ).then(response => console.log("RESULT REQUEST PR: ", response))
 
   console.log("A WAIT")
+  return result.requested_reviewers.length == 0
 }
 
 async function approvalProcess() {
@@ -301,6 +302,11 @@ async function approvalProcess() {
 
     const requestApprovalsGH = await requestApprovals(approverSet, existingRequestedApprovers)
     console.log("Approvals requested", requestApprovalsGH)
+    if(requestApprovalsGH){
+      process.exit(0);
+    }else{
+      process.exit(1);
+    }
 
   } catch (error) {
     // Handle errors from function1 or subsequent operations
