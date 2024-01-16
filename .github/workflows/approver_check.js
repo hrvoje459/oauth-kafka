@@ -162,6 +162,17 @@ async function getPrApprovals() {
   then(response => response.json())
   
   console.log("PR DETALJI", pr_details)
+  //nadi zadnji commit iz pr detalja
+  let last_commit = pr_details.head.sha
+  console.log(last_commit)
+
+  // dohvati info o kommitu
+  const last_commit_details = await fetch("https://api.github.com/repos/hrvoje459/commits/" + last_commit, { headers: headers }).
+  then(response => response.json())
+  console.log(last_commit_details.commit.committer.date)
+
+  // usporedi vrijeme zadnjeg reviewa i zadnjeg commita, ako je review nastao nakon zadnjeg commita, ne moras ponovo traziti approval
+
 
   result.forEach(element => {
     if (element.state == "CHANGES_REQUESTED" || element.state == "APPROVED") {
@@ -169,6 +180,9 @@ async function getPrApprovals() {
       console.log("USER OF APPROVAL", element.user.login)
       console.log("STATE OF APPROVAL", element.state)
       console.log("TIME OF APPROVAL", element.submitted_at)
+      if(Date.parse(element.submitted_at) < Date.parse(last_commit_details.commit.committer.date)){
+        console.log("REVIEW SUBMITTED BEFORE LAST COMMIT")
+      }
     }
   });
 
