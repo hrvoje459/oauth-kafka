@@ -176,12 +176,12 @@ async function getPrApprovals() {
 
   result.forEach(element => {
     if (element.state == "CHANGES_REQUESTED" || element.state == "APPROVED") {
-      mapOfReviews.set(element.user.login, element.state)
-      console.log("USER OF APPROVAL", element.user.login)
-      console.log("STATE OF APPROVAL", element.state)
-      console.log("TIME OF APPROVAL", element.submitted_at)
-      if(Date.parse(element.submitted_at) < Date.parse(last_commit_details.commit.committer.date)){
+      if(Date.parse(element.submitted_at) > Date.parse(last_commit_details.commit.committer.date)){
         console.log("REVIEW SUBMITTED BEFORE LAST")
+        mapOfReviews.set(element.user.login, element.state)
+        console.log("USER OF APPROVAL", element.user.login)
+        console.log("STATE OF APPROVAL", element.state)
+        console.log("TIME OF APPROVAL", element.submitted_at)
       }
     }
   });
