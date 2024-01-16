@@ -20,3 +20,12 @@ users:
     groups:
       'ZKIST_rs_001':
         - All
+  AVRS_nada_osacic:
+    topics:
+      AVRS_work_queue:
+        - All
+      ZESOI_biomed_bridge:
+        - All
+    groups:
+      AVRS_consumer_group_nada_*:
+        - All

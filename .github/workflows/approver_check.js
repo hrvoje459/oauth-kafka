@@ -243,10 +243,10 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
       headers: headers,
       body: body
     }
-  ).then(response => response.json()
-  ).then(response => console.log("RESULT REQUEST PR: ", response))
+  ).then(response => response.json())
 
-  console.log("A WAIT")
+  console.log("RESULT REQUEST PR", result)
+  return result.requested_reviewers.length == 0
 }
 
 async function approvalProcess() {
@@ -301,6 +301,11 @@ async function approvalProcess() {
 
     const requestApprovalsGH = await requestApprovals(approverSet, existingRequestedApprovers)
     console.log("Approvals requested", requestApprovalsGH)
+    if(requestApprovalsGH){
+      process.exit(0);
+    }else{
+      process.exit(1);
+    }
 
   } catch (error) {
     // Handle errors from function1 or subsequent operations
