@@ -243,10 +243,9 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
       headers: headers,
       body: body
     }
-  ).then(response => response.json()
-  ).then(response => console.log("RESULT REQUEST PR: ", response))
+  ).then(response => response.json())
 
-  console.log("A WAIT")
+  console.log("RESULT REQUEST PR", result)
   return result.requested_reviewers.length == 0
 }
 
