@@ -6,3 +6,10 @@ users:
     groups:
       '*':
         - All
+  ZPR_velika_racunica:
+    topics:
+      ZPR_veliko_racunanje:
+        - All
+    groups:
+      'ZPR_consumers_*':
+        - All

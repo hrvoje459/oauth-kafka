@@ -4,8 +4,7 @@ on:
   pull_request:
     paths:
       - 'acls/**'
-      - '**'
-    types: [ opened, reopened, synchronize, review_requested, review_request_removed]
+    types: [ opened, reopened, synchronize ]
   pull_request_review:
     types: [submitted, dismissed]
 permissions:
@@ -75,6 +74,12 @@ jobs:
         run: |
           export ADMIN_CLIENT_SASL_JAAS_CONFIG=$(cat /home/runner/work/oauth-kafka/oauth-kafka/env_file.txt)
           /opt/docker/bin/kafka-security-manager
-    - name: Check output file
+    - name: Check output file      
+      env:
+        GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
       run: |
+        echo $PR_NUMBER
+        echo ${{ github.event.issue.number }}
         node /home/runner/work/oauth-kafka/oauth-kafka/.github/workflows/approver_check.js
+
