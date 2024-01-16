@@ -33,6 +33,8 @@ users:
     topics:
       ZTEL_transciever_main_007:
         - Read
+      ZPR_veliko_racunanje:
+        - Read
     groups:
       ZEMRIS_cg_001:
         - All
