@@ -24,7 +24,7 @@ users:
     topics:
       AVRS_work_queue:
         - All
-      BYS_discord_bridge:
+      ZESOI_biomed_bridge:
         - All
     groups:
       AVRS_consumer_group_nada_*:
