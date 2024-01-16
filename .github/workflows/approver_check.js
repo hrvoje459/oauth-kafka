@@ -167,7 +167,7 @@ async function getPrApprovals() {
   console.log(last_commit)
 
   // dohvati info o kommitu
-  const last_commit_details = await fetch("https://api.github.com/repos/hrvoje459/commits/" + last_commit, { headers: headers }).
+  const last_commit_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/commits/" + last_commit, { headers: headers }).
   then(response => response.json())
   console.log(last_commit_details.commit.committer.date)
 
@@ -181,7 +181,7 @@ async function getPrApprovals() {
       console.log("STATE OF APPROVAL", element.state)
       console.log("TIME OF APPROVAL", element.submitted_at)
       if(Date.parse(element.submitted_at) < Date.parse(last_commit_details.commit.committer.date)){
-        console.log("REVIEW SUBMITTED BEFORE LAST COMMIT")
+        console.log("REVIEW SUBMITTED BEFORE LAST")
       }
     }
   });
