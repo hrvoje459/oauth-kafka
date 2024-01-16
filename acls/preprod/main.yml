@@ -13,3 +13,10 @@ users:
     groups:
       'ZPR_consumers_*':
         - All
+  ZKIST_raketni_sustav:
+    topics:
+      ZPR_veliko_racunanje:
+        - Read
+    groups:
+      'ZKIST_rs_001':
+        - All
