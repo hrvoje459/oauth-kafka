@@ -318,7 +318,7 @@ async function approvalProcess() {
     if(requestApprovalsGH){
       // RERUN "ksm-run (pull_request)" to succesfully pass all status checks
       console.log("TRIGGER_ACTION:", process.env.TRIGGER_ACTION)
-      if(process.env.TRIGGER_ACTION != "submitted" && process.env.TRIGGER_ACTION != "dismissed" ){
+      if(process.env.TRIGGER_ACTION == "submitted" || process.env.TRIGGER_ACTION == "dismissed" ){
         const rerun = rerunWorkflowOnPullRequestTrigger();
         console.log("RERUN: ",rerun)
       }
