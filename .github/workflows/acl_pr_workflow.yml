@@ -78,6 +78,7 @@ jobs:
       env:
         GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
         PR_NUMBER: ${{ github.event.pull_request.number }}
+        TRIGGER_ACTION: ${{ github.event.action }}
       run: |
         echo $PR_NUMBER
         echo ${{ github.event.issue.number }}

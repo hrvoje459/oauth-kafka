@@ -249,6 +249,20 @@ async function requestApprovals(approverSetList, existingRequestedApprovers) {
   return result.requested_reviewers.length == 0
 }
 
+async function rerunWorkflowOnPullRequestTrigger(){
+  const pr_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers })
+    .then(response => response.json())
+  const pr_workflows = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/actions/runs?event=pull_request&branch=" + pr_details.head.ref, { headers: headers })
+    .then(response => response.json()) 
+
+  const pr_workflows_rerun = await 
+    fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/actions/runs/" + pr_workflows.workflow_runs[0].id + "/rerun" , 
+        { method: "POST", headers: headers })
+    .then(response => response.json()) 
+
+  return pr_workflows_rerun
+}
+
 async function approvalProcess() {
   try {
 
@@ -302,6 +316,13 @@ async function approvalProcess() {
     const requestApprovalsGH = await requestApprovals(approverSet, existingRequestedApprovers)
     console.log("Approvals requested", requestApprovalsGH)
     if(requestApprovalsGH){
+      // RERUN "ksm-run (pull_request)" to succesfully pass all status checks
+      console.log("TRIGGER_ACTION:", process.env.TRIGGER_ACTION)
+      if(process.env.TRIGGER_ACTION == "submitted" || process.env.TRIGGER_ACTION == "dismissed" ){
+        const rerun = await rerunWorkflowOnPullRequestTrigger();
+        console.log("RERUN: ",rerun)
+      }
+      
       process.exit(0);
     }else{
       process.exit(1);

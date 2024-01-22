@@ -29,3 +29,12 @@ users:
     groups:
       AVRS_consumer_group_nada_*:
         - All
+  ZEMRIS_service_acc_1:
+    topics:
+      ZTEL_transciever_main_007:
+        - Read
+      ZPR_veliko_racunanje:
+        - Read
+    groups:
+      ZEMRIS_cg_001:
+        - All
