@@ -40,3 +40,10 @@ users:
     groups:
       ZEMRIS_cg_001:
         - All
+  ATEAM_baracus:
+    topics:
+      ATEAM_hq_feed:
+        - All
+    groups:
+      ATEAM_consumers*:
+        - All
