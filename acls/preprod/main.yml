@@ -24,6 +24,8 @@ users:
     topics:
       AVRS_work_queue:
         - All
+      AVRS_reporting:
+        - All
       ZESOI_biomed_bridge:
         - All
     groups:
