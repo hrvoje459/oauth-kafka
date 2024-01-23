@@ -28,6 +28,8 @@ users:
         - All
       ZESOI_biomed_bridge:
         - All
+      ZPR_demo_racunanje:
+        - Read
     groups:
       AVRS_consumer_group_nada_*:
         - All
