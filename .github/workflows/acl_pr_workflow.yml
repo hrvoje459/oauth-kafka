@@ -35,12 +35,12 @@ jobs:
         echo ${{ github.event.number }} 
         echo ${{ github.event.issue.number }}
       ### use third or fourth option in api calls
-      
+
     - name: Prevent file change
       uses: xalvarez/prevent-file-change-action@v1
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
-        pattern: \.github/.*
+        pattern: \.github\/
         trustedAuthors: hrvojerom
         allowNewFiles: false
 
