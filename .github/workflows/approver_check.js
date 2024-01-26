@@ -301,7 +301,7 @@ async function approvalProcess() {
     // Add admin to approverSet if there are more files changed than just acl file
     let requireAdmin = await requiresAdminApproval()
     if(requireAdmin){
-      approverSet.push(prefix_approver_map.get("ADM_"))
+      approverSet.push(new Set(prefix_approver_map.get("ADM_")))
     }
 
 
