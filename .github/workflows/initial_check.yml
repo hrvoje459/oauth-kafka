@@ -1,0 +1,31 @@
+name: ACL PR workflow
+on:
+  workflow_dispatch:
+  pull_request_target:
+    paths:
+      - '.github/**'
+    types: [ opened, reopened, synchronize ]
+
+permissions:
+  contents: read  # This is required for actions/checkout
+  pull-requests: read
+
+
+jobs:
+  initial-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+
+    - name: Prevent file change
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: |
+        for filename in $(curl https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/$PR_NUMBER/files | jq '.[].filename'); do
+          echo "Processing file: $filename"
+          if [[ $filename =~ .github/ ]]; then
+            echo "Modifying things in .github/ folder is not allowed"
+            exit 1
+          fi            
+        done
