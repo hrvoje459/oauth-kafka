@@ -9,6 +9,7 @@ on:
     types: [submitted, dismissed]
 permissions:
   contents: read  # This is required for actions/checkout
+  pull-requests: read
 
 jobs:
   build-and-publish:
@@ -33,8 +34,15 @@ jobs:
         echo ${{ github.event.pull_request.number }}
         echo ${{ github.event.number }} 
         echo ${{ github.event.issue.number }}
-
       ### use third or fourth option in api calls
+      
+    - name: Prevent file change
+      uses: xalvarez/prevent-file-change-action@v1
+      with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
+        pattern: \.github/.*
+        trustedAuthors: hrvojerom
+        allowNewFiles: false
 
   ksm-run:
     runs-on: ubuntu-latest
