@@ -40,7 +40,7 @@ jobs:
       run: |
         for filename in $(curl https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/12/files | jq '.[].filename'); do
           echo "Processing file: $filename"
-          if [[ $filename =~ ^\.github/ ]]; then
+          if [[ $filename =~ .github/ ]]; then
             echo "This is from .github folder, we dont do this here"
             exit 1
           fi            
