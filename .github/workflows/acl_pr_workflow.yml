@@ -12,42 +12,25 @@ permissions:
   pull-requests: read
 
 jobs:
-  build-and-publish:
+  initial-check:
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-
-    - name: See if there is pending requests
-      env: 
-        GHA_TOKEN: ${{ secrets.GHA_TOKEN }}
-      run: |
-        curl -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $GHA_TOKEN" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/2/requested_reviewers
-
-    - name: print ref
-      run: |
-        echo ${{ github.ref }} 
-        echo ${{ github.event.pull_request.number }}
-        echo ${{ github.event.number }} 
-        echo ${{ github.event.issue.number }}
-      ### use third or fourth option in api calls
 
     - name: Prevent file change
       run: |
         for filename in $(curl https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/12/files | jq '.[].filename'); do
           echo "Processing file: $filename"
           if [[ $filename =~ .github/ ]]; then
-            echo "This is from .github folder, we dont do this here"
+            echo "Modifying things in .github/ folder is not allowed"
             exit 1
           fi            
         done
 
   ksm-run:
     runs-on: ubuntu-latest
+    needs: initial-check
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
