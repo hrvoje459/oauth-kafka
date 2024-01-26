@@ -146,6 +146,27 @@ async function getRequestedApprovers() {
   return requestedApprovers
 }
 
+async function requiresAdminApproval() {
+  const pr_details = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER + "/files", { headers: headers })
+    .then(response => response.json())
+
+  let changed_files = []
+
+  pr_details.forEach(element => {
+    changed_files.push(element.filename)
+  });
+
+  // Needs reconfiguration for when production acls are added
+  // or match folder when admin approval not required
+  if(changed_files.length == 1 && changed_files[0] != "acls/preprod/main.yml"){
+    return true
+  }
+  if(changed_files.length > 1){
+    return true
+  }
+  return false
+}
+
 async function getPullRequestOpener() {
   const result = await fetch("https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/" + PR_NUMBER, { headers: headers }).
     then(response => response.json())
@@ -276,6 +297,12 @@ async function approvalProcess() {
 
     let approverSet = await approverSetList(prefix_approver_map, requiredPrefixApprovals);
     console.log("Required approvers", approverSet)
+
+    // Add admin to approverSet if there are more files changed than just acl file
+    let requireAdmin = await requiresAdminApproval()
+    if(requireAdmin){
+      approverSet.push(prefix_approver_map.get("ADM_"))
+    }
 
 
     // Check if pull request opener is approver and remove him from approverSet
