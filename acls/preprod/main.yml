@@ -6,3 +6,10 @@ users:
     groups:
       '*':
         - All
+  BYS_bili_mesar:
+    topics:
+      BYS_topic_001:
+        - All
+    groups:
+      'BYS_consumer_group_*':
+        - All
