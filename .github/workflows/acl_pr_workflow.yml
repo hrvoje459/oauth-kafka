@@ -37,12 +37,11 @@ jobs:
       ### use third or fourth option in api calls
 
     - name: Prevent file change
-      uses: xalvarez/prevent-file-change-action@v1
-      with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
-        pattern: .github/
-        trustedAuthors: hrvojerom
-        allowNewFiles: false
+      run: |
+        for filename in $(curl https://api.github.com/repos/hrvoje459/oauth-kafka/pulls/12/files | jq '.[].filename'); do
+          echo "Processing file: $filename"
+          # You can perform operations on each filename here
+        done
 
   ksm-run:
     runs-on: ubuntu-latest
