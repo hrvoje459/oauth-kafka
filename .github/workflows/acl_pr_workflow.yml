@@ -40,7 +40,7 @@ jobs:
       uses: xalvarez/prevent-file-change-action@v1
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
-        pattern: ".github\/.*"
+        pattern: .github/.*
         trustedAuthors: hrvojerom
         allowNewFiles: false
 
