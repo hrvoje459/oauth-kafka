@@ -6,12 +6,3 @@ users:
     groups:
       '*':
         - All
-  ZPR_velika_racunica:
-    topics:
-      ZPR_veliko_racunanje:
-        - All
-      AVRS_hq_topic:
-        - Read
-    groups:
-      'ZPR_group_*':
-        - All
