@@ -4,7 +4,7 @@ volumes:
     driver: local
 
 services:
-  kafka-1:
+  kafka-1.oauthkafka.xyz:
     #image: confluentinc/cp-kafka:7.5.1
     image: testing:1.5.0
     hostname: kafka-1
@@ -76,7 +76,7 @@ services:
 
 
 
-  # kafka-2:
+  # kafka-2.oauthkafka.xyz:
   #   image: confluentinc/cp-kafka:7.5.1
   #   hostname: kafka-2
   #   container_name: kafka-2
@@ -131,7 +131,7 @@ services:
   #   depends_on:
   #     - kafka-1
 
-  # kafka-3:
+  # kafka-3.oauthkafka.xyz:
   #   image: confluentinc/cp-kafka:7.5.1
   #   hostname: kafka-3
   #   container_name: kafka-3
@@ -186,30 +186,38 @@ services:
   #   depends_on:
   #     - kafka-1
 
-#   kafka-security-manager:
-#     image: conduktor/kafka-security-manager:latest
-#     environment:
-#       KSM_READONLY: "false"
-#       AUTHORIZER_CLASS: io.conduktor.ksm.compat.AdminClientAuthorizer
+  kafka-security-manager:
+    image: hrvoje45/custom-ksm:1.1.2
+    environment:
+      KSM_READONLY: "false"
+      AUTHORIZER_CLASS: io.conduktor.ksm.compat.AdminClientAuthorizer
 #       #AUTHORIZER_ZOOKEEPER_CONNECT: "zoo1:2181"
 #       # FILE:
 #       SOURCE_CLASS: "io.conduktor.ksm.source.FileSourceAcl"
 #       SOURCE_FILE_FILENAME: "/opt/docker/acls/preprod/main.yml"
       
-#       ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1:9092
-#       ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_SSL
-#       ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required unsecuredLoginStringClaim_sub="admin";'
+      ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1.oauthkafka.xyz:9092
+      ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_SSL
+      ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=ADM_ksm clientSecret=YagiVKiTBO9ZZgKI42I4buOwuXWUkmwI keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;'
 
-#       ADMIN_CLIENT_SASL_MECHANISM: OAUTHBEARER
-#       KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_client_admin_jaas.conf'
+      ADMIN_CLIENT_SASL_LOGIN_CALLBACK_HANDLER_CLASS: org.example.KSMLoginHandler
+      ADMIN_CLIENT_SASL_MECHANISM: OAUTHBEARER
+      ADMIN_CLIENT_SASL_OAUTHBEARER_SUB_CLAIM_NAME: azp
+      ADMIN_CLIENT_SASL_OAUTHBEARER_TOKEN_ENDPOINT_URL: https://keycloak.oauthkafka.xyz:8443/auth/realms/FER/protocol/openid-connect/token
+      
+#      KAFKA_OPTS: '-Djava.security.auth.login.config=/etc/kafka/kafka_client_admin_jaas.conf'
 
-#       ADMIN_CLIENT_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
-#       ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD: truststore_password
+      ADMIN_CLIENT_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/client.truststore.p12
+      ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD: truststore_password
 #       # GITHUB:
-# #      SOURCE_CLASS: "io.conduktor.ksm.source.GitHubSourceAcl"
-# #      SOURCE_GITHUB_USER: "conduktor"
-# #      SOURCE_GITHUB_REPO: "kafka-security-manager-example"
-# #      SOURCE_GITHUB_FILEPATH: "acls.csv"
+      SOURCE_CLASS: "io.conduktor.ksm.source.GitHubSourceAcl"
+      SOURCE_GITHUB_USER: "hrvoje459"
+      SOURCE_GITHUB_REPO: "oauth-kafka"
+      SOURCE_GITHUB_FILEPATH: "/acls/preprod/main.yml"
+      SOURCE_GITHUB_BRANCH: "main"
+      KSM_REFRESH_FREQUENCY_MS: 120000
+      SOURCE_GITHUB_BASIC: github_auth_username
+      SOURCE_GITHUB_TOKEN: github_auth_token
 
 #       # SOURCE ACLS FROM KAFKA INSTEAD
 #       # THIS WON't WORK WITH THIS DOCKER COMPOSE FILE AS IT
@@ -219,14 +227,13 @@ services:
 #       # AUTHORIZER_CLASS: "io.conduktor.ksm.compat.AdminClientAuthorizer"
 #       # ADMIN_CLIENT_BOOTSTRAP_SERVERS: "kafka1:19092"
 #       # set ADMIN_CLIENT_SECURITY_PROTOCOL, ADMIN_CLIENT_SASL_JAAS_CONFIG, ADMIN_CLIENT_SASL_MECHANISM, ADMIN_CLIENT_SSL_KEY_PASSWORD, ADMIN_CLIENT_SSL_KEYSTORE_LOCATION, ADMIN_CLIENT_SSL_KEYSTORE_PASSWORD, ADMIN_CLIENT_SSL_TRUSTSTORE_LOCATION, ADMIN_CLIENT_SSL_TRUSTSTORE_PASSWORD for a secure Kafka setup
-#     volumes:
+    volumes:
 #       - ${PWD}/acls/preprod:/opt/docker/acls/preprod:ro
 #       - ./config/ksm_admin_jaas.conf.conf:/etc/kafka/ksm_admin_jaas.conf.conf
-#       - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
-#     depends_on:
-#       - kafka-1
-# #      - kafka-2
-# #      - kafka-3
+      - ./certs/cert_authority/client.truststore.p12:/etc/kafka/secrets/client.truststore.p12
+    depends_on:
+      - kafka-1.oauthkafka.xyz
+
 
   postgres_keycloak:
     hostname: postgres_keycloak
