@@ -6,3 +6,12 @@ users:
     groups:
       '*':
         - All
+  AVRS_nada_osacic:
+    topics:
+      AVRS_topic_001:
+        - All
+      ZTEL_topic_002:
+        - Read
+    groups:
+      'AVRS_consumer_group_*':
+        - All
