@@ -6,12 +6,12 @@ users:
     groups:
       '*':
         - All
-  BYS_bili_mesar:
+  AVRS_nada_osacic:
     topics:
-      BYS_topic_001:
+      AVRS_topic_001:
         - All
       ZTEL_topic_002:
         - Read
     groups:
-      'BYS_consumer_group_*':
+      'AVRS_consumer_group_*':
         - All
