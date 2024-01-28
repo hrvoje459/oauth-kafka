@@ -198,7 +198,7 @@ services:
       
       ADMIN_CLIENT_BOOTSTRAP_SERVERS: kafka-1.oauthkafka.xyz:9092
       ADMIN_CLIENT_SECURITY_PROTOCOL: SASL_SSL
-      ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=ADM_ksm clientSecret=YagiVKiTBO9ZZgKI42I4buOwuXWUkmwI keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;'
+      ADMIN_CLIENT_SASL_JAAS_CONFIG: 'org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required clientId=client_id clientSecret=client_secret keycloak_instance="https://keycloak.oauthkafka.xyz:8443" scope=profile;'
 
       ADMIN_CLIENT_SASL_LOGIN_CALLBACK_HANDLER_CLASS: org.example.KSMLoginHandler
       ADMIN_CLIENT_SASL_MECHANISM: OAUTHBEARER
