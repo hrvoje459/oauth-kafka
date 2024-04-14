@@ -17,7 +17,7 @@ users:
         - All
   ZPR_velika_racunica:
     topics:
-      ZPR_veliko_racunanje:
+      AVRS_secret_topic:
         - All
     groups:
       ZPR_cg_*:
