@@ -22,3 +22,10 @@ users:
     groups:
       ZPR_cg_*:
         - All
+  ZTEL_service_acc_1:
+    topics:
+      AVRS_secret_topic:
+        - All
+    groups:
+      ZTEL_cg_*:
+        - Read
