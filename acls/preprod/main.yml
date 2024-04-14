@@ -15,16 +15,16 @@ users:
     groups:
       'AVRS_consumer_group_*':
         - All
-  ZPR_velika_racunica:
+  ZTEL_velika_racunica:
     topics:
-      AVRS_secret_topic:
+      ZTEL_secret_topic:
         - All
     groups:
-      ZPR_cg_*:
+      ZTEL_cg_*:
         - All
   ZTEL_service_acc_1:
     topics:
-      AVRS_secret_topic:
+      ZTEL_secret_topic:
         - All
     groups:
       ZTEL_cg_*:
