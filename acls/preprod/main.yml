@@ -17,3 +17,10 @@ users:
     groups:
       'AVRS_consumer_group_*':
         - All
+  ZKIST_devops_demo:
+    topics:
+      AVRS_vrlo_vazan_topic:
+        - Read
+    groups:
+      'ZKIST_consumer_group_*':
+        - All
