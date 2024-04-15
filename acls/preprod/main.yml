@@ -12,6 +12,8 @@ users:
         - All
       ZTEL_topic_002:
         - Read
+      AVRS_vrlo_vazan_topic:
+        - All
     groups:
       'AVRS_consumer_group_*':
         - All
