@@ -22,5 +22,5 @@ users:
       AVRS_vrlo_vazan_topic:
         - Read
     groups:
-      'ZKIST_consumer_group_*':
+      'AVRS_consumer_group_*':
         - All
